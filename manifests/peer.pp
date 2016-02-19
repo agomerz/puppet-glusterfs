@@ -5,10 +5,10 @@
 # definition directly.
 #
 define glusterfs::peer () {
-
-  exec { "/usr/sbin/gluster peer probe ${title}":
-    unless  => "/bin/egrep '^hostname.+=${title}$' /var/lib/glusterd/peers/*",
-    require => Service['glusterfs-server'],
+  unless /^$::hostname/ in $title {
+    exec { "/usr/sbin/gluster peer probe ${title}":
+      unless  => "/bin/egrep '^hostname.+=${title}$' /var/lib/glusterd/peers/*",
+      require => Service['glusterfs-server'],
+    }
   }
-
 }
